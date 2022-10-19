@@ -14,9 +14,9 @@ export KUBEVIRT_PROVIDER=external
 export IMAGE_BUILDER="${IMAGE_BUILDER:-podman}"
 export DEV_IMAGE_REGISTRY="${DEV_IMAGE_REGISTRY:-quay.io}"
 export KUBEVIRTCI_RUNTIME="${KUBEVIRTCI_RUNTIME:-podman}"
-export PRIMARY_NIC=enp2s0
-export FIRST_SECONDARY_NIC=enp3s0
-export SECOND_SECONDARY_NIC=enp4s0
+export PRIMARY_NIC=env32
+export FIRST_SECONDARY_NIC=env33
+export SECOND_SECONDARY_NIC=env34
 export FLAKE_ATTEMPTS="${FLAKE_ATTEMPTS:-5}"
 
 SKIPPED_TESTS="user-guide|bridged|\
@@ -31,7 +31,7 @@ fi
 
 if oc get ns openshift-ovn-kubernetes &> /dev/null; then
     # We are using OVNKubernetes -> use enp1s0 as primary nic
-    export PRIMARY_NIC=enp1s0
+    export PRIMARY_NIC=env32
     SKIPPED_TESTS+="|NodeNetworkConfigurationPolicy bonding default interface|\
 with ping fail|\
 when connectivity to default gw is lost after state configuration|\
@@ -51,12 +51,12 @@ if oc create -f test/e2e/machineconfigs.yaml; then
 fi
 while ! oc wait mcp --all --for=condition=Updated --timeout -1s; do sleep 1; done
 
-make cluster-sync-operator
-oc create -f test/e2e/nmstate.yaml
+# make cluster-sync-operator
+oc apply -f test/e2e/nmstate.yaml
 # On first deployment, it can take a while for all of the pods to come up
 # First wait for the handler pods to be created
-while ! oc get pods -n nmstate | grep handler; do sleep 1; done
+while ! oc get pods -n openshift-nmstate | grep handler; do sleep 1; done
 # Then wait for them to be ready
-while oc get pods -n nmstate | grep "0/1"; do sleep 1; done
+while oc get pods -n openshift-nmstate | grep "0/1"; do sleep 1; done
 # NOTE(bnemec): The test being filtered with "bridged" was re-enabled in 4.8, but seems to be consistently failing on OCP.
 make test-e2e-handler E2E_TEST_ARGS="--skip=\"${SKIPPED_TESTS}\" --flake-attempts=${FLAKE_ATTEMPTS}" E2E_TEST_TIMEOUT=4h

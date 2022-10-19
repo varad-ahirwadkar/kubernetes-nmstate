@@ -54,7 +54,7 @@ BIN_DIR = $(CURDIR)/build/_output/bin/
 export GOFLAGS=-mod=vendor
 export GOPROXY=direct
 
-export KUBECONFIG ?= $(shell ./cluster/kubeconfig.sh)
+export KUBECONFIG ?= ~/.kube/config  #$(shell ./cluster/kubeconfig.sh)
 export SSH ?= ./cluster/ssh.sh
 export KUBECTL ?= ./cluster/kubectl.sh
 
