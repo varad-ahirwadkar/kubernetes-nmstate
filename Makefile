@@ -5,7 +5,7 @@ GO_VERSION = $(shell hack/go-version.sh)
 
 export IMAGE_REGISTRY ?= quay.io
 IMAGE_REPO ?= nmstate
-NAMESPACE ?= nmstate
+NAMESPACE ?= openshift-nmstate
 
 ifeq ($(NMSTATE_PIN), future)
 HANDLER_EXTRA_PARAMS:= "--build-arg NMSTATE_SOURCE=git --build-arg FROM=quay.io/centos/centos:stream9"
@@ -22,7 +22,7 @@ OPERATOR_IMAGE_TAG ?= latest
 OPERATOR_IMAGE_FULL_NAME ?= $(IMAGE_REPO)/$(OPERATOR_IMAGE_NAME):$(OPERATOR_IMAGE_TAG)
 OPERATOR_IMAGE ?= $(IMAGE_REGISTRY)/$(OPERATOR_IMAGE_FULL_NAME)
 
-export HANDLER_NAMESPACE ?= nmstate
+export HANDLER_NAMESPACE ?= openshift-nmstate
 export OPERATOR_NAMESPACE ?= $(HANDLER_NAMESPACE)
 HANDLER_PULL_POLICY ?= Always
 OPERATOR_PULL_POLICY ?= Always
@@ -54,7 +54,7 @@ BIN_DIR = $(CURDIR)/build/_output/bin/
 export GOFLAGS=-mod=vendor
 export GOPROXY=direct
 
-export KUBECONFIG ?= $(shell ./cluster/kubeconfig.sh)
+export KUBECONFIG ?= ~/.kube/config  #$(shell ./cluster/kubeconfig.sh)
 export SSH ?= ./cluster/ssh.sh
 export KUBECTL ?= ./cluster/kubectl.sh
 
