@@ -18,7 +18,7 @@ spec:
           After=crio.service
           [Service]
           Type=oneshot
-          ExecStart=/bin/bash -c "for i in $(nmcli --fields NAME,UUID -t con show | grep 'Wired Connection' | awk -F : '{print $2}'); do nmcli con modify $i match.interface-name '!enp3s0, !enp4s0'; done"
+          ExecStart=/bin/bash -c "for i in $(nmcli --fields NAME,UUID -t con show | grep 'Wired connection' | awk -F : '{print $2}'); do nmcli con modify $i match.interface-name '!env33, !env34'; done"
           [Install]
           WantedBy=multi-user.target
         enabled: true
@@ -45,7 +45,7 @@ spec:
           After=crio.service
           [Service]
           Type=oneshot
-          ExecStart=/bin/bash -c "for i in $(nmcli --fields NAME,UUID -t con show | grep 'Wired Connection' | awk -F : '{print $2}'); do nmcli con modify $i match.interface-name '!enp3s0, !enp4s0'; done"
+          ExecStart=/bin/bash -c "for i in $(nmcli --fields NAME,UUID -t con show | grep 'Wired connection' | awk -F : '{print $2}'); do nmcli con modify $i match.interface-name '!env33, !env34'; done"
           [Install]
           WantedBy=multi-user.target
         enabled: true
